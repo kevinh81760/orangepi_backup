@@ -1,0 +1,32 @@
+{
+    "socket": {
+        "address": "0.0.0.0",
+        "port": 2500,
+        "listeners": 5
+    },
+    "sqlite": {
+        "file": "db/burger.db"
+    },
+    "camera": {
+        "basler": {
+        },
+        "qrcode_retries": 20,
+        "qrcode_min_size": 100,
+        "qrcode_expand_size": 20
+    },
+    "conveyors": [
+        {
+            "conveyor_id": 1,
+            "conveyor_name": "Conveyor 01",
+            "roi": [2950, 690, 200, 400]
+        },
+        {
+            "conveyor_id": 2,
+            "conveyor_name": "Conveyor 02",
+            "roi": [730, 1400, 160, 400]
+        }
+    ],
+    "kds": {
+        "url": "127.0.0.1:11001"
+    }
+}

@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
+
+# Runtime / debug artifacts
+photos/
+db/*.db
+camera-test.jpg
+
+# Local secrets (if added later)
+.env

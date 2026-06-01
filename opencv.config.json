@@ -1,0 +1,35 @@
+{
+    "socket": {
+        "address": "0.0.0.0",
+        "port": 2500,
+        "listeners": 5
+    },
+    "sqlite": {
+        "file": "db/burger.db"
+    },
+    "camera": {
+        "opencv": {
+            "width": 2592,
+            "height": 1944,
+            "port": 0    
+        },
+        "qrcode_retries": 20,
+        "qrcode_min_size": 100,
+        "qrcode_expand_size": 20
+    },
+    "conveyors": [
+        {
+            "conveyor_id": 1,
+            "conveyor_name": "Conveyor 01",
+            "roi": [0, 1200, 350, 744]
+        },
+        {
+            "conveyor_id": 2,
+            "conveyor_name": "Conveyor 02",
+            "roi": [2242, 450, 350, 1494]
+        }
+    ],
+    "kds": {
+        "url": "10.1.10.18:11001"
+    }
+}
