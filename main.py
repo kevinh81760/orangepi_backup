@@ -1,7 +1,7 @@
 import json
+import subprocess
 from pathlib import Path
 from burger import Run
-import pexpect
 from time import sleep
 
 def main():
@@ -12,14 +12,18 @@ def main():
         Run(config)
 
 def is_synced_ntp():
-    command_output, _ = pexpect.run("timedatectl", withexitstatus=True)
-    for line in command_output.decode("unicode_escape").split("\n"):
-        if "synchronized: yes" in line:
-            return True
-    return False
+    try:
+        result = subprocess.run(
+            ["timedatectl", "show", "-p", "NTPSynchronized", "--value"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        return result.stdout.strip().lower() == "yes"
+    except (subprocess.SubprocessError, OSError):
+        return False
 
 if __name__== "__main__":
     while not is_synced_ntp():
         sleep(1)
-        pass
     main()

@@ -4,7 +4,7 @@ import cv2
 from .entity import Area
 from pyzbar.pyzbar import decode
 from pyzbar.pyzbar import ZBarSymbol
-from multiprocessing import Pipe, Process
+from multiprocessing import Pipe, get_context
 from time import time, sleep
 from pypylon import pylon
 from typing import Any
@@ -57,20 +57,26 @@ class BaslerCamera(CameraInterface):
     def open(self):
         try:
             self.camera = pylon.InstantCamera(pylon.TlFactory.GetInstance().CreateFirstDevice())
-            self.camera.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
+            self.camera.Open()
             # self.camera.ExposureAuto.Value = "Continuous"
             self.camera.ExposureAuto.Value = "Off"
             self.camera.ExposureTime.SetValue(10000)
-            
+            self.camera.StartGrabbing(pylon.GrabStrategy_LatestImageOnly)
+
             self.converter = pylon.ImageFormatConverter()
             self.converter.OutputPixelFormat = pylon.PixelType_BGR8packed
             self.converter.OutputBitAlignment = pylon.OutputBitAlignment_MsbAligned
-        except:
-            print("Can't connect camera")
+        except Exception as e:
+            self.camera = None
+            print(f"Can't connect camera: {e}")
 
     def release(self):
-        if self.camera is not None and self.is_open():
-            self.camera.StopGrabbing()
+        if self.camera is not None:
+            if self.camera.IsGrabbing():
+                self.camera.StopGrabbing()
+            if self.camera.IsOpen():
+                self.camera.Close()
+            self.camera = None
 
     def is_open(self):
         if self.camera is not None:
@@ -235,6 +241,6 @@ class Camera:
         return client_pipe.recv()
 
     def run(self):
-        process = Process(target=self.process, daemon=True)
+        process = get_context("spawn").Process(target=self.process, daemon=True)
         process.start()
         return process
